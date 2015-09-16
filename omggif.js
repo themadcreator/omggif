@@ -427,6 +427,7 @@ function GifReader(buf) {
             p++;  // Skip terminator.
             break;
 
+          case 0x01:  // Plaintext Extension.
           case 0xfe:  // Comment Extension.
             while (true) {  // Seek through subblocks.
               var block_size = buf[p++];
@@ -650,7 +651,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
   var cur = 0;
 
   var op = 0;  // Output pointer.
-  
+
   var subblock_size = code_stream[p++];
 
   // TODO(deanm): Would using a TypedArray be any faster?  At least it would
@@ -733,7 +734,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
     }
 
     var k = chase;
-    
+
     var op_end = op + chase_length + (chase_code !== code ? 1 : 0);
     if (op_end > output_length) {
       console.log("Warning, gif stream longer than expected.");
